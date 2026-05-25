@@ -1,0 +1,25 @@
+{
+  "name": "@neurostack/notification-delivery",
+  "version": "1.0.0",
+  "description": "Multi-channel notification delivery system for alerts and events",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "lint": "eslint src",
+    "test": "jest"
+  },
+  "dependencies": {
+    "@neurostack/shared": "workspace:*",
+    "@neurostack/realtime-insights": "workspace:*",
+    "pino": "^8.14.1",
+    "nodemailer": "^6.9.3",
+    "axios": "^1.4.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/nodemailer": "^6.4.10",
+    "typescript": "^5.0.0"
+  }
+}
