@@ -1,0 +1,31 @@
+{
+  "name": "@neurostack/integration-orchestrator",
+  "version": "1.0.0",
+  "description": "Master orchestrator integrating all Intelligence Layer services",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "lint": "eslint src",
+    "test": "jest"
+  },
+  "dependencies": {
+    "@neurostack/shared": "workspace:*",
+    "@neurostack/advanced-ml": "workspace:*",
+    "@neurostack/ml-anomaly-detector": "workspace:*",
+    "@neurostack/streaming-core": "workspace:*",
+    "@neurostack/analytics-realtime": "workspace:*",
+    "@neurostack/alert-intelligence": "workspace:*",
+    "@neurostack/notification-delivery": "workspace:*",
+    "@neurostack/dashboard-recommendations": "workspace:*",
+    "@neurostack/alert-optimization": "workspace:*",
+    "@neurostack/model-serving": "workspace:*",
+    "@neurostack/metrics-aggregation": "workspace:*",
+    "pino": "^8.14.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  }
+}
