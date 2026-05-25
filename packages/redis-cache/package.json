@@ -1,0 +1,23 @@
+{
+  "name": "@neurostack/redis-cache",
+  "version": "1.0.0",
+  "description": "Distributed Redis caching for multi-node deployment",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "lint": "eslint src",
+    "test": "jest"
+  },
+  "dependencies": {
+    "@neurostack/shared": "workspace:*",
+    "@neurostack/metrics-aggregation": "workspace:*",
+    "redis": "^4.6.0",
+    "pino": "^8.14.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  }
+}
