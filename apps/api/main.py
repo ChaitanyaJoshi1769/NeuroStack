@@ -11,13 +11,16 @@ from typing import Optional, List, Dict, Any
 import os
 from dotenv import load_dotenv
 
+# Import v2 intelligence routes
+from routes_v2_intelligence import router as v2_router
+
 load_dotenv()
 
 # Initialize FastAPI app
 app = FastAPI(
     title="NeuroStack API",
     description="AI-native data + intelligence operating system",
-    version="0.1.0",
+    version="0.2.0",
 )
 
 # Add CORS middleware
@@ -28,6 +31,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Include v2 intelligence routes
+app.include_router(v2_router)
 
 # ==================== Models ====================
 
@@ -86,7 +92,7 @@ async def health_check() -> HealthResponse:
     """
     return HealthResponse(
         status="healthy",
-        version="0.1.0",
+        version="0.2.0",
         timestamp=datetime.utcnow(),
     )
 
@@ -234,13 +240,19 @@ async def system_status() -> Dict[str, Any]:
     """
     return {
         "status": "operational",
-        "version": "0.1.0",
+        "version": "0.2.0",
+        "phase": "Phase 2 - Intelligence Layer",
         "components": {
             "hybrid_query_engine": "ready",
             "semantic_engine": "ready",
             "vector_runtime": "ready",
             "agent_orchestrator": "ready",
             "memory_system": "ready",
+            "analytics_engine": "ready",
+            "context_engine": "ready",
+            "query_optimizer": "ready",
+            "knowledge_graph": "ready",
+            "workflow_engine": "ready",
         },
         "timestamp": datetime.utcnow().isoformat(),
     }
@@ -255,8 +267,9 @@ async def startup_event():
     Initialize application on startup
     """
     print("NeuroStack API starting up...")
-    print("Version: 0.1.0")
-    print("Components: Query Engine, Semantic Layer, Vector Runtime, Agent Orchestrator")
+    print("Version: 0.2.0 - Phase 2 Intelligence Layer")
+    print("Foundation: Query Engine, Semantic Layer, Vector Runtime, Agent Orchestrator")
+    print("Intelligence: Analytics Engine, Context Engine, Query Optimizer, Knowledge Graph, Workflows")
 
 
 @app.on_event("shutdown")
@@ -277,8 +290,11 @@ async def root() -> Dict[str, str]:
     """
     return {
         "message": "Welcome to NeuroStack API",
-        "version": "0.1.0",
+        "version": "0.2.0",
+        "phase": "Phase 2 - Intelligence Layer",
         "docs": "/docs",
+        "v1_api": "/api/v1",
+        "v2_api": "/api/v2",
     }
 
 
