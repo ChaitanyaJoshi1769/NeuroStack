@@ -1,0 +1,24 @@
+{
+  "name": "@neurostack/advanced-ml",
+  "version": "1.0.0",
+  "description": "Advanced machine learning models for forecasting and anomaly detection",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "lint": "eslint src",
+    "test": "jest"
+  },
+  "dependencies": {
+    "@neurostack/shared": "workspace:*",
+    "@neurostack/ml-anomaly-detector": "workspace:*",
+    "pino": "^8.14.1",
+    "simple-statistics": "^7.7.5",
+    "ml": "^5.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  }
+}
