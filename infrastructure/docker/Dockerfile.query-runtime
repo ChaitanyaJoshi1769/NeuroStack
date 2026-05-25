@@ -1,0 +1,29 @@
+# Multi-stage build for Rust Query Runtime
+FROM rust:1.74-alpine as builder
+
+WORKDIR /build
+
+# Install dependencies
+RUN apk add --no-cache \
+    musl-dev \
+    pkg-config \
+    openssl-dev
+
+COPY apps/query-runtime/Cargo.toml Cargo.toml
+COPY apps/query-runtime/src src
+
+RUN cargo build --release
+
+# ==================== Runtime ====================
+FROM alpine:3.18
+
+RUN apk add --no-cache ca-certificates libssl3
+
+COPY --from=builder /build/target/release/query-runtime /usr/local/bin/
+
+EXPOSE 3002
+
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+    CMD wget --quiet --tries=1 --spider http://localhost:3002/health || exit 1
+
+ENTRYPOINT ["/usr/local/bin/query-runtime"]

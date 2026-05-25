@@ -1,0 +1,234 @@
+version: '3.8'
+
+services:
+  # PostgreSQL - for metadata and lineage
+  postgres:
+    image: postgres:16-alpine
+    container_name: neurostack-postgres
+    environment:
+      POSTGRES_DB: neurostack
+      POSTGRES_USER: neurostack
+      POSTGRES_PASSWORD: neurostack
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U neurostack']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Redis - for caching and session management
+  redis:
+    image: redis:7-alpine
+    container_name: neurostack-redis
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Kafka - for event streaming
+  kafka:
+    image: confluentinc/cp-kafka:7.5.0
+    container_name: neurostack-kafka
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true'
+    ports:
+      - '9092:9092'
+    depends_on:
+      - zookeeper
+    volumes:
+      - kafka_data:/var/lib/kafka/data
+
+  # Zookeeper - required by Kafka
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.5.0
+    container_name: neurostack-zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - '2181:2181'
+    volumes:
+      - zookeeper_data:/var/lib/zookeeper/data
+
+  # Qdrant - vector database
+  qdrant:
+    image: qdrant/qdrant:latest
+    container_name: neurostack-qdrant
+    ports:
+      - '6333:6333'
+    volumes:
+      - qdrant_data:/qdrant/storage
+    environment:
+      QDRANT_API_KEY: neurostack
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:6333/health']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Neo4j - knowledge graph database
+  neo4j:
+    image: neo4j:5-enterprise
+    container_name: neurostack-neo4j
+    environment:
+      NEO4J_AUTH: neo4j/neurostack
+      NEO4J_ACCEPT_LICENSE_AGREEMENT: 'yes'
+    ports:
+      - '7687:7687'
+      - '7474:7474'
+    volumes:
+      - neo4j_data:/data
+    healthcheck:
+      test: ['CMD-SHELL', 'cypher-shell -u neo4j -p neurostack "RETURN 1" || exit 1']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Prometheus - metrics collection
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: neurostack-prometheus
+    ports:
+      - '9090:9090'
+    volumes:
+      - ./infrastructure/observability/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+
+  # Grafana - dashboards
+  grafana:
+    image: grafana/grafana:latest
+    container_name: neurostack-grafana
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: admin
+      GF_INSTALL_PLUGINS: grafana-clock-panel
+    ports:
+      - '3001:3000'
+    volumes:
+      - grafana_data:/var/lib/grafana
+    depends_on:
+      - prometheus
+
+  # FastAPI - API Service
+  api:
+    build:
+      context: .
+      dockerfile: infrastructure/docker/Dockerfile.api
+    container_name: neurostack-api
+    environment:
+      DATABASE_URL: postgresql://neurostack:neurostack@postgres:5432/neurostack
+      REDIS_URL: redis://redis:6379
+      KAFKA_BROKERS: kafka:29092
+      QDRANT_URL: http://qdrant:6333
+      NEO4J_URI: neo4j://neo4j:7687
+      LOG_LEVEL: info
+    ports:
+      - '8000:8000'
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      kafka:
+        condition: service_started
+      qdrant:
+        condition: service_healthy
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:8000/health']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Query Runtime - Rust service
+  query-runtime:
+    build:
+      context: .
+      dockerfile: infrastructure/docker/Dockerfile.query-runtime
+    container_name: neurostack-query-runtime
+    environment:
+      RUST_LOG: info
+      DATABASE_URL: postgresql://neurostack:neurostack@postgres:5432/neurostack
+      REDIS_URL: redis://redis:6379
+    ports:
+      - '3002:3002'
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:3002/health']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Agent Orchestrator
+  agent-orchestrator:
+    build:
+      context: .
+      dockerfile: infrastructure/docker/Dockerfile.agent-orchestrator
+    container_name: neurostack-agent-orchestrator
+    environment:
+      NODE_ENV: development
+      PORT: 3001
+      API_URL: http://api:8000
+      QUERY_RUNTIME_URL: http://query-runtime:3002
+      REDIS_URL: redis://redis:6379
+    ports:
+      - '3001:3001'
+    depends_on:
+      - api
+      - query-runtime
+      - redis
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:3001/health']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Next.js Web Frontend
+  web:
+    build:
+      context: .
+      dockerfile: infrastructure/docker/Dockerfile.web
+    container_name: neurostack-web
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:8000/api/v1
+      NEXT_PUBLIC_ENVIRONMENT: development
+    ports:
+      - '3000:3000'
+    depends_on:
+      - api
+      - agent-orchestrator
+      - query-runtime
+
+volumes:
+  postgres_data:
+  redis_data:
+  kafka_data:
+  zookeeper_data:
+  qdrant_data:
+  neo4j_data:
+  prometheus_data:
+  grafana_data:
+
+networks:
+  default:
+    name: neurostack-network

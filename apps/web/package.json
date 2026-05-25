@@ -1,0 +1,36 @@
+{
+  "name": "neurostack-web",
+  "version": "0.1.0",
+  "description": "Next.js web application for NeuroStack",
+  "scripts": {
+    "dev": "next dev --port 3000",
+    "build": "next build",
+    "start": "next start -p 3000",
+    "lint": "next lint",
+    "type-check": "tsc --noEmit",
+    "clean": "rm -rf .next dist .turbo"
+  },
+  "dependencies": {
+    "next": "15.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "@neurostack/ui": "workspace:*",
+    "@neurostack/sdk": "workspace:*",
+    "@neurostack/shared": "workspace:*",
+    "tailwindcss": "^3.3.6",
+    "autoprefixer": "^10.4.16",
+    "postcss": "^8.4.31",
+    "d3": "^7.8.5",
+    "recharts": "^2.10.3",
+    "framer-motion": "^10.16.4",
+    "zustand": "^4.4.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.5",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "typescript": "^5.3.0",
+    "eslint": "^8.56.0",
+    "eslint-config-next": "^15.0.0"
+  }
+}
