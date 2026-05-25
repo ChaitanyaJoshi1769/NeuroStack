@@ -1,0 +1,32 @@
+{
+  "name": "@neurostack/dashboard-ui",
+  "version": "1.0.0",
+  "description": "Production-grade React components for intelligent dashboards with real-time data binding",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "lint": "eslint src",
+    "test": "jest",
+    "storybook": "storybook dev -p 6006"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0"
+  },
+  "dependencies": {
+    "@neurostack/shared": "workspace:*",
+    "@neurostack/agentic-bi": "workspace:*",
+    "@neurostack/streaming-core": "workspace:*",
+    "@recharts/recharts": "^2.8.0",
+    "classnames": "^2.3.2",
+    "pino": "^8.14.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
+    "typescript": "^5.0.0"
+  }
+}
