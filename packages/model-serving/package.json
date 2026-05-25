@@ -1,0 +1,25 @@
+{
+  "name": "@neurostack/model-serving",
+  "version": "1.0.0",
+  "description": "Production model serving and inference service with caching and batching",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "lint": "eslint src",
+    "test": "jest"
+  },
+  "dependencies": {
+    "@neurostack/shared": "workspace:*",
+    "@neurostack/advanced-ml": "workspace:*",
+    "@neurostack/ml-anomaly-detector": "workspace:*",
+    "pino": "^8.14.1",
+    "lru-cache": "^10.0.0"
+  },
+  "devDependencies": {
+    "@types/lru-cache": "^7.10.0",
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  }
+}
