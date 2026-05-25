@@ -1,0 +1,23 @@
+{
+  "name": "@neurostack/dashboard-recommendations",
+  "version": "1.0.0",
+  "description": "Intelligent widget recommendation engine for personalized dashboards",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "lint": "eslint src",
+    "test": "jest"
+  },
+  "dependencies": {
+    "@neurostack/shared": "workspace:*",
+    "@neurostack/dashboard-ui": "workspace:*",
+    "@neurostack/advanced-ml": "workspace:*",
+    "pino": "^8.14.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  }
+}
