@@ -1,0 +1,25 @@
+{
+  "name": "@neurostack/batch-inference",
+  "version": "1.0.0",
+  "description": "Batch inference engine for large-scale offline predictions and dataset scoring",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "lint": "eslint src",
+    "test": "jest"
+  },
+  "dependencies": {
+    "@neurostack/shared": "workspace:*",
+    "@neurostack/feature-store": "workspace:*",
+    "@neurostack/inference-server": "workspace:*",
+    "@neurostack/distributed-logging": "workspace:*",
+    "@neurostack/redis-cache": "workspace:*",
+    "pino": "^8.14.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  }
+}
