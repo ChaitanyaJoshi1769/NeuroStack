@@ -1,0 +1,22 @@
+{
+  "name": "@neurostack/model-explainability",
+  "version": "1.0.0",
+  "description": "Model interpretability and explainability framework for ML model understanding",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "lint": "eslint src",
+    "test": "jest"
+  },
+  "dependencies": {
+    "@neurostack/shared": "workspace:*",
+    "@neurostack/inference-server": "workspace:*",
+    "pino": "^8.14.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  }
+}
