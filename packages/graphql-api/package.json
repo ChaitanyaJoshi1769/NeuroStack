@@ -1,0 +1,27 @@
+{
+  "name": "@neurostack/graphql-api",
+  "version": "1.0.0",
+  "description": "GraphQL API server for flexible querying of ML infrastructure components",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "lint": "eslint src",
+    "test": "jest"
+  },
+  "dependencies": {
+    "@neurostack/shared": "workspace:*",
+    "@neurostack/feature-store": "workspace:*",
+    "@neurostack/inference-server": "workspace:*",
+    "@neurostack/model-registry": "workspace:*",
+    "@neurostack/batch-inference": "workspace:*",
+    "@neurostack/api-gateway": "workspace:*",
+    "@neurostack/advanced-monitoring": "workspace:*",
+    "pino": "^8.14.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  }
+}
