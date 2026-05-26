@@ -1,0 +1,23 @@
+{
+  "name": "@neurostack/ml-finetuning",
+  "version": "1.0.0",
+  "description": "Adaptive ML model fine-tuning and continuous learning system",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "lint": "eslint src",
+    "test": "jest"
+  },
+  "dependencies": {
+    "@neurostack/shared": "workspace:*",
+    "@neurostack/advanced-ml": "workspace:*",
+    "@neurostack/ml-anomaly-detector": "workspace:*",
+    "pino": "^8.14.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  }
+}
