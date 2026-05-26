@@ -1,0 +1,23 @@
+{
+  "name": "@neurostack/workflow-orchestration",
+  "version": "1.0.0",
+  "description": "Workflow orchestration engine for ML pipeline execution, job scheduling, and dependency management",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "lint": "eslint src",
+    "test": "jest"
+  },
+  "dependencies": {
+    "@neurostack/shared": "workspace:*",
+    "@neurostack/distributed-logging": "workspace:*",
+    "@neurostack/advanced-monitoring": "workspace:*",
+    "pino": "^8.14.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  }
+}
