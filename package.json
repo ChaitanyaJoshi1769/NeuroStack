@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "description": "AI-native data + intelligence operating system",
   "private": true,
+  "packageManager": "npm@9.0.0",
   "workspaces": [
     "apps/*",
     "packages/*"
